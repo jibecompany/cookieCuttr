@@ -50,7 +50,8 @@
             cookieDiscreetLinkText: "Cookies?",
             cookieDiscreetPosition: "topleft", //options: topleft, topright, bottomleft, bottomright         
             cookieNoMessage: false, // change to true hide message from all pages apart from your policy page
-            cookieDomain: ""
+            cookieDomain: "",
+            cookieSubDomains: false
         };
         var options = $.extend(defaults, options);
         var message = defaults.cookieMessage.replace('{{cookiePolicyLink}}', defaults.cookiePolicyLink);
@@ -83,6 +84,7 @@
         var cookieDiscreetLinkText = options.cookieDiscreetLinkText;
         var cookieDiscreetPosition = options.cookieDiscreetPosition;
         var cookieNoMessage = options.cookieNoMessage;
+        var cookieSubDomains = options.cookieSubDomains;
         // cookie identifier
         var $cookieAccepted = $.cookie('cc_cookie_accept') == "cc_cookie_accept";
         $.cookieAccepted = function () {
@@ -218,6 +220,17 @@
         // for top bar
         $('.cc-cookie-accept, .cc-cookie-decline').click(function (e) {
             e.preventDefault();
+            
+            /* Check if cookie needs to be set on all TLD subdomains */
+            var currentDomain = document.domain;
+            var domain = currentDomain
+            if (cookieSubDomains) {
+                var domainParts = currentDomain.split('.');
+                if (domainParts.length >= 2) {
+                    domain = '.' + domainParts[domainParts.length - 2] + '.' + domainParts[domainParts.length - 1]
+                }
+            }
+            
             if ($(this).is('[href$=#decline]')) {
                 $.cookie("cc_cookie_accept", null, {
                     path: '/'
@@ -251,7 +264,8 @@
                 });
                 $.cookie("cc_cookie_accept", "cc_cookie_accept", {
                     expires: cookieExpires,
-                    path: '/'
+                    path: '/',
+                    domain: domain
                 });
             }
             $(".cc-cookies").fadeOut(function () {
