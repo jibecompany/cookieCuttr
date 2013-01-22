@@ -97,6 +97,7 @@
         // write cookie accept button
         if (cookieAcceptButton) {
             var cookieAccept = ' <a href="#accept" class="cc-cookie-accept">' + cookieAcceptButtonText + '</a> ';
+            cookieMessage = cookieMessage.replace('{{cookieAcceptButton}}', cookieAccept);
         } else {
             var cookieAccept = "";
         }
@@ -194,9 +195,9 @@
                 }
             } else if ((!cookieAnalytics) && (!cookieDiscreetLink)) { // show privacy policy option
                 if (appOrPre) {
-                    $('body').append('<div class="cc-cookies ' + cookieOverlay + '">' + cookieMessage + cookieAccept + cookieDecline + '</div>');
+                    $('body').append('<div class="cc-cookies ' + cookieOverlay + '">' + cookieMessage + cookieDecline + '</div>');
                 } else {
-                    $('body').prepend('<div class="cc-cookies ' + cookieOverlay + '">' + cookieMessage + cookieAccept + cookieDecline + '</div>');
+                    $('body').prepend('<div class="cc-cookies ' + cookieOverlay + '">' + cookieMessage + cookieDecline + '</div>');
                 }
             }
         }
